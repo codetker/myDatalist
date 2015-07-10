@@ -1,0 +1,33 @@
+{
+	"name": "datalist",
+	"title": "jQuery Mydatalist",
+	"description": "jQuery plugin for datalist.",
+	"keywords": [
+		"datalist"
+	],
+	"version": "0.1",
+	"author": {
+	"name": "jQuery Foundation and other contributors"
+	// "url": "? How shall I write this? ?"
+	},
+	"maintainers": [
+		{
+			"name": "codetker",
+			"email": "codetker@sina.com"
+			// "url": "none"
+		}
+	],
+	"licenses": [
+		{
+			// "type": "none",
+			// "url": "none"
+		}
+	],
+	// "bugs": "https://github.com/jquery/jquery-color/issues",
+	// "homepage": "https://github.com/jquery/jquery-color",
+	// "docs": "https://github.com/jquery/jquery-color",
+	// "download": "",
+	"dependencies": {
+		"jquery": ">=1.5"
+	}
+}
