@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<meta name="robots" content="index, follow" />
+<meta name="googlebot" content="index, follow" />
+<meta name="author" content="codetker" />
+    <title> 表单选中弹出框</title>
+<link href="css/reset.css" type="text/css" rel="Stylesheet" /> 
+<link href="css/master.css" type="text/css" rel="Stylesheet" /> 
+
+<script type="text/javascript" src="js/jquery-1.11.0.js"></script>
+</head>
+
+<body>
+    <div class="wrap">
+    	<form class="center">
+            <div class="input_wrap">
+				<input name="input1" class="input input1" type="text"/>
+				<ul class="input1_ul select_list">
+					<li>问题1</li>
+					<li>问题2</li>
+					<li>问题3</li>
+					<li>问题4</li>
+					<li>问题5</li>
+				</ul>
+            </div>
+    	</form>
+    </div>
+<script type="text/javascript" src="js/jquery.codetker.datalist.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $(".input_wrap").myDatalist({"bgcolor":"red","widths":1,"heights":1}); 
+});
+</script>
+</body>
+</html>
