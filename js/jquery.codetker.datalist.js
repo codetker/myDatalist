@@ -27,6 +27,7 @@
             var obj=this.$element; //obj为最外层包裹的div之类的元素，应该拥有positive：relative属性,方便datalist定位。
             var input=$(obj).children().eq(0); //input元素
             var inputUl=$(obj).children().eq(1); //datalist元素
+            //设置弹出datalist的大小和样式
             $(inputUl).css({
                 "top":$(input).outerHeight()+"px",
                 "width":$(input).outerWidth()*width+"px"
@@ -35,16 +36,75 @@
                 "width":$(input).outerWidth()*width+"px",
                 "height":$(input).outerHeight()*height+"px"
             });
-            $(inputUl).children('li').hover(function() {
+            /*$(inputUl).children('li').hover(function() {
                 $(this).css("background-color",color);
             }, function() {
                 $(this).css("background-color","#fff");
+            });*/
+            $(inputUl).children('li').mouseover(function() {
+                $(this).css("background-color",color);
+                $(this).siblings().css("background-color","#fff");
             });
+            $(inputUl).children('li').mouseout(function() {
+                $(this).css("background-color","#fff");
+            });
+            //再次focus变为空，也可以改为某个默认值
+            //datalist的显示和隐藏
             $(input).focus(function() {
                 if($(this).val()!=""){
                     $(this).val("");
                 }
                 $(inputUl).slideDown(500);
+                /*
+                 * 改进：仅在focus的时候触发,增强用户体验
+                 * 1.绑定上下按钮事件
+                 * 2.绑定enter事件
+                 * 3.去掉默认属性
+                 */
+                var n=-1;  //记录位置,-1表示未选中。当n=-1时直接按enter浏览器默认为倒数第一个
+                $(document).keydown(function(event) {
+                    /* 点击键盘上下键，datalist变化 */
+                    stopDefaultAndBubble(event);
+                    if(event.keyCode==38){//向上按钮
+                        if(n==0||n==-1){
+                            n=4;
+                        }else{
+                            n--;
+                        }
+                        $(inputUl).children('li').eq(n).siblings().mouseout();
+                        $(inputUl).children('li').eq(n).mouseover();
+                    }else if(event.keyCode==40){//向上按钮
+                        if(n==4){
+                            n=0;
+                        }else{
+                            n++;
+                        }
+                        $(inputUl).children('li').eq(n).siblings().mouseout();
+                        $(inputUl).children('li').eq(n).mouseover();
+                    }else if(event.keyCode==13){//enter键
+                        $(inputUl).children('li').eq(n).mouseout();
+                        $(input).val( $(inputUl).children('li').eq(n).text() );
+                        n=-1;
+                    }
+                });
+
+
+                //去掉浏览器默认
+                function stopDefaultAndBubble(e){
+                    e=e||window.event;
+                    //阻止默认行为
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    }
+                    e.returnValue=false;
+
+                    //阻止冒泡
+                    if (e.stopPropagation) {
+                        e.stopPropagation();
+                    }
+                    e.cancelBubble=true;
+                }
+
             });
             $(input).blur(function() {
                 $(inputUl).slideUp(500);
@@ -52,6 +112,7 @@
             $(inputUl).delegate('li', 'click', function() {
                     $(input).val( $(this).text() );
             });
+
             return this;
         }
     }
@@ -62,54 +123,58 @@
         //调用其方法
         return datalist.showList();
     }
-    /*$.fn.myDatalist=function(options){
-        //设置默认值
-        var defaults={
-            "color":"red",
-            "width":1,   //表示相对于上面输入框对应值的倍数，默认相等
-            "height":1
-        };
-        var settings=$.extend({},defaults,options);
-        //没有定义则用默认值，定义了则用定义后的值,加上一个空对象对对象进行修改，防止重写了默认值导致后面使用时用的是之前修改了的属性(保护默认值)
-        return this.each(function(){
-            var o=settings;
-            var color=o.color;
-            var width=o.width;
-            var height=o.height; //属性值
-
-            var obj=$(this); //obj为最外层包裹的div之类的元素，应该拥有positive：relative属性,方便datalist定位。
-            var input=$(obj).children().eq(0); //input元素
-            var inputUl=$(obj).children().eq(1); //datalist元素
-            $(inputUl).css({
-                "top":$(input).outerHeight()*height+"px",
-                "width":$(input).outerWidth()*width+"px"
-            });
-            $(inputUl).children().css({
-                "width":$(input).outerWidth()*width+"px"
-            });
-            $(inputUl).children('li').hover(function() {
-                $(this).css("background-color",color);
-            }, function() {
-                $(this).css("background-color","#fff");
-            });
-            $(input).focus(function() {
-                if($(this).val()!=""){
-                    $(this).val("");
-                }
-                $(inputUl).slideDown(500);
-            });
-            $(input).blur(function() {
-                $(inputUl).slideUp(500);
-            });
-            $(inputUl).delegate('li', 'click', function() {
-                    $(input).val( $(this).text() );
-            });
-        });
-    }*/
+ 
 })(jQuery,window,document);
 
+                // 判断鼠标悬停
+                /*var mouseposition;
+                $(document).mouseover(function(e) {
+                    mouseposition= e.target;
+                });*/
 
-// $(".input_wrap").myDatalist();
-// $(function(){
-//     $(".input_wrap").myDatalist();
-// })
+                /*//根据鼠标滚动方向执行对应函数
+                function handle(delta){
+                    if(delta<0){
+                        if(n==0){
+                            n=4;
+                        }else{
+                            n--;
+                        }
+                    }else{
+                        if(n==4){
+                            n=0;
+                        }else{
+                            n++;
+                        }
+                    }
+                }
+
+                //绑定滑轮事件
+                function wheel(event){
+                    var delta=0;
+                    if(!event) event=window.event;
+                    if(event.wheelDelta){
+                        delta=event.wheelDelta;
+                        if(window.opera) delta=-delta;
+                    }else if(event.detail){
+                        delta=-event.detail;
+                    }
+                    if(delta){
+                        handle(delta);
+                    }
+                }
+                //注册事件
+                if (window.addEventListener)
+                window.addEventListener('DOMMouseScroll', wheel, false);
+                window.onmousewheel = document.onmousewheel = wheel;
+
+                $(document).bind("mousedown",function(e){
+                    if (e.which==2) {
+                        stopDefaultAndBubble(e);
+                        //bugfix 搜狗浏览器的ie内核只有在定时器触发这个函数才生效。。(貌似有些无语)
+                        setTimeout(function(){
+                            stopDefaultAndBubble(e);
+                        },10);
+                    }
+                });
+*/
