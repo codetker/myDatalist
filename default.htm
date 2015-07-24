@@ -18,7 +18,7 @@
     <div class="wrap">
     	<form class="center">
             <div class="input_wrap">
-				<input name="input1" class="input input1" type="text"/>
+				<input name="input1" class="input input1" type="text" autocomplete="off"/>
 				<ul class="input1_ul select_list">
 					<li>问题1</li>
 					<li>问题2</li>
@@ -32,7 +32,11 @@
 <script type="text/javascript" src="js/jquery.codetker.datalist.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-   $(".input_wrap").myDatalist({"bgcolor":"red","widths":1,"heights":1}); //css3渐变？
+	$(".input_wrap").myDatalist({
+		'bgcolor': '#eee',
+		'bgcolorHover': '#ccc',
+		'fixKeyboard': true
+	});
 });
 </script>
 </body>
